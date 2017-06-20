@@ -1,0 +1,28 @@
+﻿@model VerkiezingHelper.Models.PartyModel
+
+@{
+    ViewBag.Title = "PartyDetails";
+}
+
+<h2>PartyDetails</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">@Model.Party.Name</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveParty", "Default", FormMethod.Post))
+        {
+            <div class="form-group">
+                @Html.Label("Name: ")
+                @Html.TextBoxFor(x => x.Party.Name, new {@class = "form-control"})
+            </div>
+            <div class="form-group">
+                @Html.Label("Lijsttrekker: ")
+                @Html.TextBoxFor(x => x.Party.LeadCandidate, new {@class = "form-control"})
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(x => x.Party.Id)
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        }
+    </div>
+</div>

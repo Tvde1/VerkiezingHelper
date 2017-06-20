@@ -10,12 +10,43 @@
 <head>
     <meta name="viewport" content="width=device-width"/>
     <title>Open</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css"/>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
 </head>
 <body>
+
 <div class="container" style="margin: 0 auto;">
+
+    @if (Model.Error != null)
+    {
+        <div class="alert alert-danger" style="margin-top: 20px">
+            <a class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
+            <strong>Error!</strong> @Model.Error
+        </div>
+    }
+
     @using (Html.BeginForm("Open", "Default", FormMethod.Post))
     {
+        <button class="btn btn-info" type="submit">Nieuw</button>
+        <br/>
+        @Html.Label("Naam: ")
+        @Html.TextBox("electionName")
+        ;
+    }
+    <br/>
+
+    @foreach (var election in Model.Elections)
+    {
+        using (Html.BeginForm("Open", "Default", FormMethod.Post))
+        {
+            @Html.Hidden("electionName", election)
+            <button class="btn btn-default" type="submit">@election</button>
+        }
     }
 </div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
 </body>
 </html>

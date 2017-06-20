@@ -119,7 +119,9 @@
     <Compile Include="Helpers\Objects\Election.cs" />
     <Compile Include="Helpers\Objects\Party.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\IndexModel.cs" />
     <Compile Include="Models\OpenModel.cs" />
+    <Compile Include="Models\PartyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +135,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Default\Open.cshtml" />
+    <Content Include="Views\Default\PartyDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
