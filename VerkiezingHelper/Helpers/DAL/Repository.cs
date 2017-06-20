@@ -59,5 +59,10 @@ namespace VerkiezingHelper.Helpers.DAL
         {
             return _databaseContext.GetCoalitions(electionId);
         }
+
+        public Election CreateNewElection(string electionName)
+        {
+            return _databaseContext.SaveNewElection(electionName);
+        }
     }
 }

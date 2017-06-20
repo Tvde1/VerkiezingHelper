@@ -72,5 +72,21 @@ WHERE PartyPk = {electionId}";
             var data = DatabaseHandler.GetData(query);
             return ObjectFactory.CreateList(data, ObjectFactory.CreateCoalition);
         }
+
+        public Election SaveNewElection(string electionName)
+        {
+            var query = new SqlCommand(
+                "INSERT INTO Election (Name,Date,AmountOfSeats) VALUES (@name,null,null); SELECT SCOPE_IDENTITY()");
+            query.Parameters.AddWithValue("@name", electionName);
+            try
+            {
+                var data = DatabaseHandler.GetData(query);
+                return new Election((int) data.Rows[0]["ElectionPk"], electionName, null, null);
+            }
+            catch
+            {
+                return new Election(null, electionName, null, null);
+            }
+        }
     }
 }

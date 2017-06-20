@@ -14,5 +14,6 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
         Election GetElection(string electionName);
         List<Party> GetParties(int electionId);
         List<Coalition> GetCoalitions(int electionId);
+        Election SaveNewElection(string electionName);
     }
 }
