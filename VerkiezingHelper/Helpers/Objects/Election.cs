@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace VerkiezingHelper.Helpers.Objects
 {
     public class Election : BaseObject
     {
-        private int _amountOfSeats;
-        private DateTime _date;
-        private List<Party> _parties;
+        private int?            _amountOfSeats;
         private List<Coalition> _coalitions;
+        private DateTime        _date;
+        private List<Party>     _parties;
+
+        public Election(int id, string name, int? amountOfSeats, DateTime date) : base(id, name)
+        {
+            _amountOfSeats = amountOfSeats;
+            _date = date;
+            _parties = Repository.GetParties(Id);
+            _coalitions = Repository.GetCoalitions(Id);
+        }
 
         public void CreateCoalition()
         {
@@ -20,10 +26,6 @@ namespace VerkiezingHelper.Helpers.Objects
         public void HandleError()
         {
             throw new NotImplementedException();
-        }
-
-        public Election(int id, string name) : base(id, name)
-        {
         }
 
         public override void Save()
