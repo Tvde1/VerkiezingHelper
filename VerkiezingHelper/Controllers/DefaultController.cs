@@ -21,7 +21,9 @@ namespace VerkiezingHelper.Controllers
             if (election == null)
                 return RedirectToAction("Open");
 
-            var model = new IndexModel {Election = election};
+            var parties = election.Repository.GetAllParties();
+
+            var model = new IndexModel {Election = election, Parties = parties};
 
             return View(model);
         }
@@ -107,6 +109,11 @@ namespace VerkiezingHelper.Controllers
             party.Save();
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult NewParty()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

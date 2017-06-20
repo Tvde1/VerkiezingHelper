@@ -74,5 +74,10 @@ namespace VerkiezingHelper.Helpers.DAL
         {
             return _databaseContext.GetParty(partyId, electionId);
         }
+
+        public List<Party> GetAllParties()
+        {
+            return _databaseContext.GetAllParties();
+        }
     }
 }

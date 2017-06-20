@@ -159,5 +159,10 @@ WHERE ElectionParty.ElectionCk = {electionId} AND ElectionParty.PartyCk = {party
 
             return data.Rows.Count == 0 ? null : ObjectFactory.CreateParty(data.Rows[0]);
         }
+
+        public List<Party> GetAllParties()
+        {
+            return ObjectFactory.CreateList(DatabaseHandler.GetData("SELECT * FROM Party"), ObjectFactory.CreateParty);
+        }
     }
 }
