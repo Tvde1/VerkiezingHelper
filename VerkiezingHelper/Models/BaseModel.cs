@@ -6,5 +6,6 @@ namespace VerkiezingHelper.Models
     {
         protected Repository Repository { get; }
         public string Error { get; set; }
+        public string Warning { get; set; }
     }
 }

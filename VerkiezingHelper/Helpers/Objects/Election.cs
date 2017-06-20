@@ -5,6 +5,10 @@ namespace VerkiezingHelper.Helpers.Objects
 {
     public class Election : BaseObject
     {
+        public Election() : base(null, null)
+        {
+        }
+
         public Election(int? id, string name, int? amountOfSeats, DateTime? date) : base(id, name)
         {
             AmountOfSeats = amountOfSeats;
@@ -14,7 +18,7 @@ namespace VerkiezingHelper.Helpers.Objects
             Coalitions = Repository.GetCoalitions(Id.Value);
         }
 
-        public int? AmountOfSeats { get; }
+        public int? AmountOfSeats { get; set; }
         public List<Coalition> Coalitions { get; }
         public DateTime? Date { get; }
         public List<Party> Parties { get; }

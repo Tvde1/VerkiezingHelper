@@ -4,6 +4,10 @@ namespace VerkiezingHelper.Helpers.Objects
 {
     public class Coalition : BaseObject
     {
+        public Coalition() : base(null, null)
+        {
+        }
+
         public Coalition(int id, string name) : base(id, name)
         {
         }
