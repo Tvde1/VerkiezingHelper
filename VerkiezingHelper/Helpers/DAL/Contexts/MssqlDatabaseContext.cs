@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using VerkiezingHelper.Helpers.Objects;
 
 namespace VerkiezingHelper.Helpers.DAL.Contexts
@@ -9,32 +11,74 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
     {
         public void Save(Party party)
         {
-            throw new NotImplementedException();
+            if (party?.Id == null) return;
+
+            var query = new SqlCommand($"UPDATE Party SET Name = @name LeadCandidate = @lc WHERE PartyPk = {party.Id}");
+            query.Parameters.AddWithValue("@name", party.Name);
+            query.Parameters.AddWithValue("@lc", party.LeadCandidate);
+            DatabaseHandler.ExecuteQuery(query);
         }
 
         public void Save(Coalition coalition)
         {
-            throw new NotImplementedException();
+            if (coalition?.Id == null) return;
+
+            var query = new SqlCommand($"UPDATE Coalition SET Name = @name WHERE CoalitionPk = {coalition.Id}");
+            query.Parameters.AddWithValue("@name", coalition.Name);
+            DatabaseHandler.ExecuteQuery(query);
+
+            var currentParties =
+                DatabaseHandler.GetData(new SqlCommand(
+                    $"SELECT PartyCk FROM CoalitionParty WHERE CoalitionCk = {coalition.Id}"));
+
+            foreach (DataRow dataRow in currentParties.Rows)
+                if (coalition.Parties.All(x => x.Id != (int) dataRow["PartyCk"]))
+                    DatabaseHandler.ExecuteQuery(
+                        new SqlCommand(
+                            $"DELETE FROM CoalitionParty WHERE CoalitionCk = {coalition.Id} AND PartyCk = {(int) dataRow.ItemArray[0]}"));
+
+            foreach (var party in coalition.Parties)
+            {
+                if (currentParties.Rows.Cast<DataRow>()
+                    .Any(currentPartiesRow => (int) currentPartiesRow["PartyCk"] == party.Id))
+                    continue;
+
+                DatabaseHandler.ExecuteQuery(new SqlCommand(
+                    $"INSERT INTO CoalitionParty (PartyCk,CoalitionCk) VALUES ({party.Id},{coalition.Id})"));
+            }
         }
 
         public void Save(Election election)
         {
-            throw new NotImplementedException();
+            if (election?.Id == null) return;
+
+            var query = new SqlCommand(
+                $"UPDATE Election SET Name = @name Date = @date AmountOfSeats = @seats WHERE Election = {election.Id}");
+            query.Parameters.AddWithValue("@name", election.Name);
+            if (election.Date == null) query.Parameters.AddWithValue("@date", DBNull.Value);
+            else query.Parameters.AddWithValue("@date", election.Date);
+            if (election.AmountOfSeats == null) query.Parameters.AddWithValue("@seats", DBNull.Value);
+            else query.Parameters.AddWithValue("@seats", election.AmountOfSeats);
+
+            DatabaseHandler.ExecuteQuery(query);
         }
 
         public void Delete(Party party)
         {
-            throw new NotImplementedException();
+            if (party?.Id == null) return;
+            DatabaseHandler.ExecuteQuery($"DELETE FROM Party WHERE PartyPk = {party.Id}");
         }
 
         public void Delete(Coalition coalition)
         {
-            throw new NotImplementedException();
+            if (coalition?.Id == null) return;
+            DatabaseHandler.ExecuteQuery($"DELETE FROM Coalition WHERE CoalitionPk = {coalition.Id}");
         }
 
         public void Delete(Election election)
         {
-            throw new NotImplementedException();
+            if (election?.Id == null) return;
+            DatabaseHandler.ExecuteQuery($"DELETE FROM Election WHERE ElectionPk = {election.Id}");
         }
 
         public Election GetElection(string electionName)

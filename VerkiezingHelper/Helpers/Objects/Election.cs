@@ -5,18 +5,19 @@ namespace VerkiezingHelper.Helpers.Objects
 {
     public class Election : BaseObject
     {
-        private int?            _amountOfSeats;
-        private List<Coalition> _coalitions;
-        private DateTime?       _date;
-        private List<Party>     _parties;
-
-        public Election(int id, string name, int? amountOfSeats, DateTime? date) : base(id, name)
+        public Election(int? id, string name, int? amountOfSeats, DateTime? date) : base(id, name)
         {
-            _amountOfSeats = amountOfSeats;
-            _date = date;
-            _parties = Repository.GetParties(Id);
-            _coalitions = Repository.GetCoalitions(Id);
+            AmountOfSeats = amountOfSeats;
+            Date = date;
+            if (Id == null) return;
+            Parties = Repository.GetParties(Id.Value);
+            Coalitions = Repository.GetCoalitions(Id.Value);
         }
+
+        public int? AmountOfSeats { get; }
+        public List<Coalition> Coalitions { get; }
+        public DateTime? Date { get; }
+        public List<Party> Parties { get; }
 
         public void CreateCoalition()
         {
@@ -30,12 +31,12 @@ namespace VerkiezingHelper.Helpers.Objects
 
         public override void Save()
         {
-            throw new NotImplementedException();
+            Repository.Save(this);
         }
 
         public override void Delete()
         {
-            throw new NotImplementedException();
+            Repository.Delete(this);
         }
     }
 }
