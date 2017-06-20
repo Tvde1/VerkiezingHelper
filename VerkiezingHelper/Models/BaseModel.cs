@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using VerkiezingHelper.Helpers.DAL;
+﻿using VerkiezingHelper.Helpers.DAL;
 
 namespace VerkiezingHelper.Models
 {

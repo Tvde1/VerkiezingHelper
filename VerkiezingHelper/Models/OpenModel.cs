@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Xml.Linq;
-using VerkiezingHelper.Helpers.Objects;
+﻿using System.Collections.Generic;
 
 namespace VerkiezingHelper.Models
 {
@@ -13,7 +8,6 @@ namespace VerkiezingHelper.Models
 
         public void OpenElection(string election)
         {
-            
         }
     }
 }
