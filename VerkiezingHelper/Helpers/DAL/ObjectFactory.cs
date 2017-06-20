@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,17 +13,20 @@ namespace VerkiezingHelper.Helpers.DAL
             if (row == null) return null;
             var seats = row.IsNull("AmountOfSeats") ? null : (int?) row["AmountOfSeats"];
             var date = row.IsNull("Date") ? null : (DateTime?) row["Date"];
-            return new Election((int)row["ElectionPk"], (string)row["Name"], seats, date);
+            return new Election((int) row["ElectionPk"], (string) row["Name"], seats, date);
         }
 
         public static Coalition CreateCoalition(DataRow row)
         {
-            return row == null ? null : new Coalition((int)row["CoalitionPk"], (string)row[""]);
+            return row == null ? null : new Coalition((int) row["CoalitionPk"], (string) row[""]);
         }
 
         public static Party CreateParty(DataRow row)
         {
-            return row == null ? null : new Party((int)row["PartyPk"], (string)row["Name"], (string)row["LeadCandidate"], (int)row["AmountOfVotes"]);
+            return row == null
+                ? null
+                : new Party((int) row["PartyPk"], (string) row["Name"], (string) row["LeadCandidate"],
+                    (int) row["AmountOfVotes"]);
         }
 
         public static List<T> CreateList<T>(DataTable data, Func<DataRow, T> func)

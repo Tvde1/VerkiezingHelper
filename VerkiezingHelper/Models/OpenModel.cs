@@ -5,9 +5,5 @@ namespace VerkiezingHelper.Models
     public class OpenModel : BaseModel
     {
         public List<string> Elections { get; }
-
-        public void OpenElection(string election)
-        {
-        }
     }
 }
