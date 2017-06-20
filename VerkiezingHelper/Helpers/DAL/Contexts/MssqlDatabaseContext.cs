@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.EnterpriseServices.Internal;
 using VerkiezingHelper.Helpers.Objects;
 
 namespace VerkiezingHelper.Helpers.DAL.Contexts
@@ -43,13 +42,35 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
             var query = new SqlCommand("SELECT * FROM Election WHERE Name = @name");
             query.Parameters.AddWithValue("@name", electionName);
             var data = DatabaseHandler.GetData(query);
-            if (data.Rows.Count == 0) return null;
-            return ObjectFactory.CreateElection(data.Rows[0]);
+            return data.Rows.Count == 0 ? null : ObjectFactory.CreateElection(data.Rows[0]);
         }
 
-        public List<Party> GetParties(int id)
+        public List<Party> GetParties(int electionId)
         {
-            throw new NotImplementedException();
+            var query =
+                $@"
+SELECT Party.PartyPk, Party.Name, Party.LeadCandidate, ElectionParty.AmountOfVotes, ElectionParty.AmountOfSeats, ElectionParty.PercentOfVotes 
+FROM Party 
+INNER JOIN 
+ElectionParty ON Party.PartyPk = ElectionParty.PartyCk
+WHERE PartyPk = {electionId}";
+
+            var data = DatabaseHandler.GetData(query);
+            return ObjectFactory.CreateList(data, ObjectFactory.CreateParty);
+        }
+
+        public List<Coalition> GetCoalitions(int electionId)
+        {
+            var query =
+                $@"
+SELECT
+Coalition.CoalitionPk, Coalition.ElectionFk, Coalition.PresidentFk, Coalition.Name
+FROM Coalition
+INNER JOIN CoalitionParty ON Coalition.CoalitionPk = CoalitionParty.CoalitionCk
+WHERE PartyPk = {electionId}";
+
+            var data = DatabaseHandler.GetData(query);
+            return ObjectFactory.CreateList(data, ObjectFactory.CreateCoalition);
         }
     }
 }

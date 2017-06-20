@@ -12,6 +12,7 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
         void Delete(Coalition coalition);
         void Delete(Election election);
         Election GetElection(string electionName);
-        List<Party> GetParties(int id);
+        List<Party> GetParties(int electionId);
+        List<Coalition> GetCoalitions(int electionId);
     }
 }

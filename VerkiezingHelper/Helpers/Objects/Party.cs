@@ -1,5 +1,3 @@
-using System;
-
 namespace VerkiezingHelper.Helpers.Objects
 {
     public class Party : BaseObject

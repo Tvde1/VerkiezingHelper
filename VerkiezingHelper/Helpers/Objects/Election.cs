@@ -7,10 +7,10 @@ namespace VerkiezingHelper.Helpers.Objects
     {
         private int?            _amountOfSeats;
         private List<Coalition> _coalitions;
-        private DateTime        _date;
+        private DateTime?       _date;
         private List<Party>     _parties;
 
-        public Election(int id, string name, int? amountOfSeats, DateTime date) : base(id, name)
+        public Election(int id, string name, int? amountOfSeats, DateTime? date) : base(id, name)
         {
             _amountOfSeats = amountOfSeats;
             _date = date;

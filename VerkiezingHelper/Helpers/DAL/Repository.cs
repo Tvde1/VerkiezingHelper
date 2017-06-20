@@ -50,9 +50,14 @@ namespace VerkiezingHelper.Helpers.DAL
             return _databaseContext.GetElection(electionName);
         }
 
-        public List<Party> GetParties(int id)
+        public List<Party> GetParties(int electionId)
         {
-            return _databaseContext.GetParties(id);
+            return _databaseContext.GetParties(electionId);
+        }
+
+        public List<Coalition> GetCoalitions(int electionId)
+        {
+            return _databaseContext.GetCoalitions(electionId);
         }
     }
 }
