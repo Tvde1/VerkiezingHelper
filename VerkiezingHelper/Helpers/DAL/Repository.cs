@@ -1,4 +1,5 @@
-﻿using VerkiezingHelper.Helpers.DAL.Contexts;
+﻿using System.Collections.Generic;
+using VerkiezingHelper.Helpers.DAL.Contexts;
 using VerkiezingHelper.Helpers.Objects;
 
 namespace VerkiezingHelper.Helpers.DAL
@@ -41,6 +42,17 @@ namespace VerkiezingHelper.Helpers.DAL
         public void Export(Election election)
         {
             _exportContext.Export();
+        }
+
+        public Election LoadElection(string electionName)
+        {
+            if (electionName == null) return null;
+            return _databaseContext.GetElection(electionName);
+        }
+
+        public List<Party> GetParties(int id)
+        {
+            return _databaseContext.GetParties(id);
         }
     }
 }

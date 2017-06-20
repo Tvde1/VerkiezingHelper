@@ -1,4 +1,5 @@
-﻿using VerkiezingHelper.Helpers.Objects;
+﻿using System.Collections.Generic;
+using VerkiezingHelper.Helpers.Objects;
 
 namespace VerkiezingHelper.Helpers.DAL.Contexts
 {
@@ -10,5 +11,7 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
         void Delete(Party party);
         void Delete(Coalition coalition);
         void Delete(Election election);
+        Election GetElection(string electionName);
+        List<Party> GetParties(int id);
     }
 }

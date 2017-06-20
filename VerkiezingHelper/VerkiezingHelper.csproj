@@ -107,7 +107,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\BasisModel.cs" />
+    <Compile Include="Helpers\DAL\Contexts\IDatabaseContext.cs" />
+    <Compile Include="Helpers\DAL\Contexts\IExportContext.cs" />
+    <Compile Include="Helpers\DAL\Contexts\MssqlDatabaseContext.cs" />
+    <Compile Include="Helpers\DAL\Contexts\TxtExportContext.cs" />
+    <Compile Include="Helpers\DAL\Repository.cs" />
+    <Compile Include="Helpers\Objects\BaseObject.cs" />
+    <Compile Include="Helpers\Objects\Coalition.cs" />
+    <Compile Include="Helpers\Objects\Election.cs" />
+    <Compile Include="Helpers\Objects\Party.cs" />
+    <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\OpenModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -121,6 +130,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Default\Open.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -130,7 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
