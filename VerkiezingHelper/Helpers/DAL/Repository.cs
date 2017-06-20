@@ -64,5 +64,15 @@ namespace VerkiezingHelper.Helpers.DAL
         {
             return _databaseContext.SaveNewElection(electionName);
         }
+
+        public List<string> GetAllElectionNames()
+        {
+            return _databaseContext.GetAllElectionNames();
+        }
+
+        public Party GetParty(int partyId, int electionId)
+        {
+            return _databaseContext.GetParty(partyId, electionId);
+        }
     }
 }

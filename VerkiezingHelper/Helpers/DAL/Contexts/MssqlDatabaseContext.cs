@@ -13,7 +13,8 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
         {
             if (party?.Id == null) return;
 
-            var query = new SqlCommand($"UPDATE Party SET Name = @name LeadCandidate = @lc WHERE PartyPk = {party.Id}");
+            var query = new SqlCommand(
+                $"UPDATE Party SET Name = @name, LeadCandidate = @lc WHERE PartyPk = {party.Id}");
             query.Parameters.AddWithValue("@name", party.Name);
             query.Parameters.AddWithValue("@lc", party.LeadCandidate);
             DatabaseHandler.ExecuteQuery(query);
@@ -53,7 +54,7 @@ namespace VerkiezingHelper.Helpers.DAL.Contexts
             if (election?.Id == null) return;
 
             var query = new SqlCommand(
-                $"UPDATE Election SET Name = @name Date = @date AmountOfSeats = @seats WHERE Election = {election.Id}");
+                $"UPDATE Election SET Name = @name, Date = @date, AmountOfSeats = @seats WHERE ElectionPk = {election.Id}");
             query.Parameters.AddWithValue("@name", election.Name);
             if (election.Date == null) query.Parameters.AddWithValue("@date", DBNull.Value);
             else query.Parameters.AddWithValue("@date", election.Date);
@@ -97,7 +98,7 @@ SELECT Party.PartyPk, Party.Name, Party.LeadCandidate, ElectionParty.AmountOfVot
 FROM Party 
 INNER JOIN 
 ElectionParty ON Party.PartyPk = ElectionParty.PartyCk
-WHERE PartyPk = {electionId}";
+WHERE ElectionParty.ElectionCk = {electionId}";
 
             var data = DatabaseHandler.GetData(query);
             return ObjectFactory.CreateList(data, ObjectFactory.CreateParty);
@@ -107,11 +108,10 @@ WHERE PartyPk = {electionId}";
         {
             var query =
                 $@"
-SELECT
-Coalition.CoalitionPk, Coalition.ElectionFk, Coalition.PresidentFk, Coalition.Name
+SELECT Coalition.CoalitionPk, Coalition.ElectionFk, Coalition.PresidentFk, Coalition.Name
 FROM Coalition
 INNER JOIN CoalitionParty ON Coalition.CoalitionPk = CoalitionParty.CoalitionCk
-WHERE PartyPk = {electionId}";
+WHERE CoalitionParty.PartyCk = {electionId}";
 
             var data = DatabaseHandler.GetData(query);
             return ObjectFactory.CreateList(data, ObjectFactory.CreateCoalition);
@@ -120,17 +120,44 @@ WHERE PartyPk = {electionId}";
         public Election SaveNewElection(string electionName)
         {
             var query = new SqlCommand(
-                "INSERT INTO Election (Name,Date,AmountOfSeats) VALUES (@name,null,null); SELECT SCOPE_IDENTITY()");
+                "INSERT INTO Election (Name,Date,AmountOfSeats) VALUES (@name,null,null); SELECT SCOPE_IDENTITY() AS Id");
             query.Parameters.AddWithValue("@name", electionName);
             try
             {
                 var data = DatabaseHandler.GetData(query);
-                return new Election((int) data.Rows[0]["ElectionPk"], electionName, null, null);
+                return new Election(int.Parse(data.Rows[0]["Id"].ToString()), electionName, null, null);
             }
             catch
             {
                 return new Election(null, electionName, null, null);
             }
+        }
+
+        public List<string> GetAllElectionNames()
+        {
+            var query = "SELECT Name FROM Election";
+            try
+            {
+                var data = DatabaseHandler.GetData(query);
+                return data.Rows.Cast<DataRow>().Select(row => (string) row["Name"]).ToList();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        public Party GetParty(int partyId, int electionId)
+        {
+            var query = $@"
+SELECT Party.PartyPk, Party.Name, Party.LeadCandidate, ElectionParty.AmountOfVotes, ElectionParty.AmountOfSeats, ElectionParty.PercentOfVotes 
+FROM Party 
+INNER JOIN 
+ElectionParty ON Party.PartyPk = ElectionParty.PartyCk
+WHERE ElectionParty.ElectionCk = {electionId} AND ElectionParty.PartyCk = {partyId}";
+            var data = DatabaseHandler.GetData(query);
+
+            return data.Rows.Count == 0 ? null : ObjectFactory.CreateParty(data.Rows[0]);
         }
     }
 }
