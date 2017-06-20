@@ -5,7 +5,9 @@ namespace VerkiezingHelper.Helpers.DAL
 {
     public static class DatabaseHandler
     {
-        private const string ConnectionString = "...";
+        private const string ConnectionString =
+                @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Tim\LP_Database.mdf;Integrated Security=True"
+            ;
 
         public static DataTable GetData(SqlCommand query)
         {
@@ -30,8 +32,10 @@ namespace VerkiezingHelper.Helpers.DAL
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
+                conn.Open();
                 query.Connection = conn;
                 query.ExecuteNonQuery();
+                conn.Close();
             }
         }
 
