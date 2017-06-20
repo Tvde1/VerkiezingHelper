@@ -1,0 +1,3 @@
+To Do:
+ - Trigger om te checken of coalitie partij wel in verkiezing zit.
+ - Trigger om te checken of premier wel in de verkiezing zit.
