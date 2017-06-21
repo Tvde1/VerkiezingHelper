@@ -9,9 +9,9 @@ namespace VerkiezingHelper.Helpers.DAL
         private readonly IDatabaseContext _databaseContext = new MssqlDatabaseContext();
         private readonly IExportContext _exportContext = new TxtExportContext();
 
-        public void Save(Party party)
+        public void Save(Party party, int? electionId)
         {
-            _databaseContext.Save(party);
+            _databaseContext.Save(party, electionId);
         }
 
         public void Save(Coalition coalition)
@@ -70,14 +70,45 @@ namespace VerkiezingHelper.Helpers.DAL
             return _databaseContext.GetAllElectionNames();
         }
 
-        public Party GetParty(int partyId, int electionId)
+        public Party GetParty(int partyId, int? electionId, bool isNew)
         {
-            return _databaseContext.GetParty(partyId, electionId);
+            return isNew ? _databaseContext.CreateParty() : _databaseContext.GetParty(partyId, electionId);
         }
 
         public List<Party> GetAllParties()
         {
             return _databaseContext.GetAllParties();
+        }
+
+        public void AddPartyToElection(Party party, int? electionId)
+        {
+            if (party.Id == null || electionId == null) return;
+            _databaseContext.AddPartyToElection(party, electionId.Value);
+        }
+
+        public Coalition GetCoalition(string name, int? electionId)
+        {
+            if (name == "null" || electionId == null)
+                return null;
+            return _databaseContext.GetCoalition(name, electionId);
+        }
+
+        public int? AddCoalitionToElection(Coalition coalition, int? electionId)
+        {
+            if (coalition == null || electionId == null)
+                return null;
+            return _databaseContext.AddCoalitionToElection(coalition, electionId);
+        }
+
+        public List<Party> GetParties(Coalition coalition)
+        {
+            return coalition?.Id == null ? null : _databaseContext.GetParties(coalition);
+        }
+
+        public List<Party> GetParties(string[] dataParties, int? electionId)
+        {
+            if (electionId == null) return null;
+            return _databaseContext.GetParties(dataParties, electionId.Value);
         }
     }
 }

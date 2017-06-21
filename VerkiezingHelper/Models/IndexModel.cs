@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VerkiezingHelper.Helpers.Objects;
 
 namespace VerkiezingHelper.Models
@@ -7,6 +6,8 @@ namespace VerkiezingHelper.Models
     public class IndexModel : BaseModel
     {
         public Election Election { get; set; }
-        public List<Party> Parties { get; set; }
+        public List<Party> AllParties { get; set; }
+        public string CoalitionName { get; set; }
+        public List<Party> CoalitionParties { get; set; }
     }
 }

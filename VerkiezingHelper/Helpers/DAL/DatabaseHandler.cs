@@ -45,7 +45,9 @@ namespace VerkiezingHelper.Helpers.DAL
             {
                 using (var comm = new SqlCommand(query, conn))
                 {
+                    conn.Open();
                     comm.ExecuteNonQuery();
+                    conn.Close();
                 }
             }
         }

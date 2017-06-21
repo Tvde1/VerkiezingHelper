@@ -1,0 +1,88 @@
+﻿@model VerkiezingHelper.Models.CoalitionModel
+
+@{
+    ViewBag.Title = "CoalitionDetails";
+}
+
+<h2>@Model.Coalition.Name</h2>
+
+<div class="panel-group">
+
+    @using (Html.BeginForm("SaveCoalition", "Default", FormMethod.Post))
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">Details</div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.HiddenFor(x => x.Coalition.Id)
+                    @Html.HiddenFor(x => x.Coalition.Name)
+                    @Html.TextBoxFor(x => x.NewName)
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-default">Opslaan</button>
+            </div>
+        </div>
+    }
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Partijen</div>
+
+        <div class="panel-body">
+            Minister President: @Model.Coalition.President.LeadCandidate
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Lijsttrekker</th>
+                    <th>Aantal Stemmen</th>
+                    <th>% van de Stemmen</th>
+                    <th>Aantal Zetels</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var party in Model.Coalition.Parties)
+                {
+                    <tr>
+                        <td>@party.Name</td>
+                        <td>@party.LeadCandidate</td>
+                        <td>@party.AmountOfVotes</td>
+                        <td>@party.PercentOfVotes</td>
+                        <td>@party.AmountOfSeats</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+
+    @using (Html.BeginForm("Export", "Default", FormMethod.Get))
+    {
+        @Html.HiddenFor(x => x.Coalition.Name)
+        <div class="panel panel-default">
+            <div class="panel-heading">Exporteer.</div>
+            <div class="panel-body">
+                Selecteer uw gewenste formaat.
+                <select>
+                    <option>JSON</option>
+                </select>
+                <button type="submit">Exporteer.</button>
+            </div>
+        </div>
+    }
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Overzicht</div>
+
+        <div class="panel-body">
+            <div class="form-group">
+                Binnenkort zichabaar.
+            </div>
+        </div>
+    </div>
+
+</div>

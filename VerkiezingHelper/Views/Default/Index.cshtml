@@ -1,71 +1,211 @@
-﻿@model VerkiezingHelper.Models.IndexModel
+﻿@using VerkiezingHelper.Helpers
+@model VerkiezingHelper.Models.IndexModel
 
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
+@using (Html.BeginForm("SaveElection", "Default", FormMethod.Post))
+{
+    <div class="col-sm-9">
 
-<div class="col-sm-9">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="pull-left">Partijen</div>
-            <div class="pull-right"><button class="btn btn-default" data-toggle="modal" data-target="#addModal">Toevoegen</button></div>
-        </div>
-        <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="pull-left">Partijen</div>
+                <div style="clear: both;"></div>
+                <div class="pull-right">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#addModal">Toevoegen</button>
+                </div>
+            </div>
+            <div class="panel-body">
 
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Naam</th>
-                    <th>Lijstrrekker</th>
-                    <th>Stemmen</th>
-                    <th>% Stemmen</th>
-                    <th>Aantal Zetels</th>
-                    <th>Details</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var party in Model.Election.Parties)
-                {
+
+                <table class="table table-striped table-hover">
+                    <thead>
                     <tr>
-                        <td>@Html.CheckBoxFor(x => party.Checked)</td>
-                        <td>@party.Name</td>
-                        <td>@party.LeadCandidate</td>
-                        <td>@Html.TextBoxFor(x => party.AmountOfVotes, new {style = "number"})</td>
-                        <td>@(party.PercentOfVotes + "%")</td>
-                        <td>@party.AmountOfSeats</td>
-                        <td>@Html.ActionLink("&times;", "PartyDetails", "Default", new {id = party.Id})</td>
+                        <th></th>
+                        <th>Naam</th>
+                        <th>Lijstrrekker</th>
+                        <th>Stemmen</th>
+                        <th>% Stemmen</th>
+                        <th>Aantal Zetels</th>
+                        <th>Details</th>
                     </tr>
-                }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @for (var index = 0; index < Model.Election.Parties.Count; index++)
+                    {
+                        <tr>
+                            <td>@Html.CheckBoxFor(x => x.Election.Parties[index].Checked, new {id = Model.Election.Parties[index].Name.RemoveWhitespace() + "Selected"})</td>
+                            <td>@Model.Election.Parties[index].Name</td>
+                            <td>@Model.Election.Parties[index].LeadCandidate</td>
+                            <td>@Html.TextBoxFor(x => x.Election.Parties[index].AmountOfVotes, new {id = Model.Election.Parties[index].Name.RemoveWhitespace() + "Votes", onChange = "updateValues();", type = "number", value = "0"})</td>
+                            <td>
+                                <span id="@(Model.Election.Parties[index].Name.RemoveWhitespace())PercentLabel">
+                                    @Html.DisplayFor(x => x.Election.Parties[index].PercentOfVotes)
+                                </span>%
+                            </td>
+                            <td>
+                                <span id="@(Model.Election.Parties[index].Name.RemoveWhitespace())SeatsLabel">
+                                    @Html.DisplayFor(x => x.Election.Parties[index].AmountOfSeats)
+                                </span>
+                            </td>
+                            @Html.HiddenFor(x => x.Election.Parties[index].Name)
+                            <td>@Html.ActionLink("⚙", "PartyDetails", "Default", new {id = Model.Election.Parties[index].Id}, null)</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
 
+            </div>
         </div>
     </div>
-</div>
-<div class="col-sm-3">
-    <div class="panel panel-default">
-        <div class="panel-heading">Controls</div>
-        <div class="panel-body">
-            @using (Html.BeginForm("SaveElection", "Default", FormMethod.Post))
-            {
+    <div class="col-sm-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Controls</div>
+            <div class="panel-body">
                 <div class="form-group">
-                    @Html.Label("Name: ")
-                    @Html.TextBoxFor(x => x.Election.Name, new {@class = "input-sm form-control"})
+                    @Html.Label("Name: ")@Html.TextBoxFor(x => x.Election.Name, new {@class = "input-sm form-control"})
                 </div>
                 <div class="form-group">
-                    @Html.Label("Aantal Zetels: ")
-                    @Html.TextBoxFor(x => x.Election.AmountOfSeats, new {@class = "input-sm form-control", type = "number"})
+                    @Html.Label("Aantal Zetels: ")@Html.TextBoxFor(x => x.Election.AmountOfSeats, new {@class = "input-sm form-control", type = "number"})
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-default" type="submit">Opslaan</button>
+                    <select class="form-control" id="coalitionSelect">
+                        @foreach (var coalition in Model.Election.Coalitions)
+                        {
+                            <option>@coalition.Name</option>
+                        }
+                    </select>
+                    <button type="button" class="btn btn-default" onclick="location.href = `/Default/CoalitionDetails/?name=${$('#coalitionSelect').val()}` ">View Coalition</button>
+                    <input type="text" id="coalitionName"/>
+                    <button type="button" class="btn btn-default" onclick="newCoalition()">New Coalition</button>
                 </div>
+            </div>
+            <div class="panel-footer">
+                <div class="form-group">
+                    <button class="btn btn-default" type="submit"> Opslaan </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+
+    const nameList = ['@Html.Raw(string.Join("\', \'", Model.AllParties.Select(x => x.Name.RemoveWhitespace())))'];
+    const totalSeats = @(Model.Election.AmountOfSeats?.ToString() ?? "null");
+
+    truncateDecimals = function(number) {
+        return Math[number < 0 ? 'ceil' : 'floor'](number);
+    };
+
+    var a = 5.467;
+    var truncated = truncateDecimals(a * 100) / 100; // = 5.46
+
+
+    function updateValues() {
+
+        console.log('Updating...');
+
+        let totalVotes = 0;
+
+        nameList.forEach(name => {
+            const text = $(`#${name}Votes`).val();
+            const number = parseInt(text) || 0;
+            console.log(`Total votes was: ${totalVotes}. Text is ${text} and it's converted to ${number}.`);
+            totalVotes += number;
+        });
+
+        console.log(`Total votes: ${totalVotes}`);
+
+        nameList.forEach(name => {
+            const votes = $(`#${name}Votes`).val();
+
+            const percent = votes / totalVotes;
+
+            const calculatedPercent = 100 * percent;
+            const calculatedSeats = percent * totalSeats;
+
+            console.log(
+                `Party ${name} has ${votes} and that means ${calculatedPercent}% and ${calculatedSeats} seats.`);
+
+            $(`#${name}PercentLabel`).html(Math.round(calculatedPercent * 100) / 100);
+            $(`#${name}SeatsLabel`).html(Math.round(calculatedSeats));
+        });
+    }
+
+    $(document).ready(function() { updateValues() });
+
+
+    function newCoalition() {
+        const selectedCoalitions = [];
+        let amountOfSeats = 0;
+
+        console.log(`Total Seats: ${totalSeats}`);
+
+        if (!totalSeats) {
+            console.log('Showing error: No seats.');
+            $('#errorModal').modal('show');
+            $('#errorModalTekst').html('Uh uh! U moet eerst invullen hoe veel zetels gebruikt mogen worden.');
+        }
+
+        nameList.forEach(c => {
+            console.log(`Looping through name ${c}. Checked is ${$(`#${c}Selected`).is(":checked")}`);
+            if ($(`#${c}Selected`).is(":checked")) {
+                selectedCoalitions.push(c);
+                console.log(`Pushed. selectedCoalitions is now: ${selectedCoalitions}`);
+                amountOfSeats += parseInt($(`#${c}SeatsLabel`).html());
+                console.log(`Pushed. amountOfSeats is now: ${amountOfSeats}`);
             }
-        </div>
-    </div>
-</div>
+        });
+
+        if (selectedCoalitions.length < 2) {
+            $('#errorModal').modal('show');
+            $('#errorModalTekst')
+                .html(
+                    'Uh uh! De coalitie die u gevormd heeft heeft niet genoeg partijen. Selecteer minstens twee partijen!');
+        } else if (amountOfSeats < totalSeats / 2) {
+            $('#errorModal').modal('show');
+            $('#errorModalTekst')
+                .html(
+                    'Uh uh! De coalitie die u gevormd heeft heeft niet genoeg zetels.\nDe coalitie moet ten minste @decimal.Divide(Model.Election.AmountOfSeats ?? 0, 2) zetels hebben.');
+        } else if (!$('#coalitionName')[0].value) {
+            $('#errorModal').modal('show');
+            $('#errorModalTekst').html('Uh uh! U moet de coalitie wel een naam geven!');
+        } else {
+
+            const data = {
+                Parties: selectedCoalitions,
+                Name: $('#coalitionName')[0].value
+            };
+            console.log('Sending data:');
+            console.log(data);
+
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: '/Default/CreateCoalition',
+                data: { "json": JSON.stringify(data) },
+                success: function(json) {
+                    if (json) {
+                        console.log('ok');
+                    } else {
+                        console.log('failed');
+                    }
+                },
+            });
+
+            location.href = `/Default/CoalitionDetails?name=${data.Name}`;
+        }
+
+
+    }
+
+</script>
+
 
 <div id="addModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -75,17 +215,19 @@
                 <h4 class="modal-title">Add Party</h4>
             </div>
             <div class="modal-body">
-                
-                
+
+
                 <div class="btn-group">
-                    <button type="button" class="btn btn-primary" onclick="location.href = @Html.Action("NewParty")">Nieuw</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href = '/Default/NewParty'">Nieuw</button>
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        @foreach (var party in Model.Parties)
+                        @foreach (var party in Model.AllParties)
                         {
-                            <li><a href="@("/General/AddToParty/" + party.Id)">@party.Name</a></li>
+                            <li>
+                                <a href="@("/Default/AddToParty/" + party.Id)">@party.Name</a>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -95,5 +237,24 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<div id="errorModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Not Enough Seats</h4>
+            </div>
+            <div class="modal-body" id="errorModalTekst">
+                <p>
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>

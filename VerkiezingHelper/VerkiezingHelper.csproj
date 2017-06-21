@@ -47,6 +47,9 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -107,6 +110,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Algorithms.cs" />
+    <Compile Include="Helpers\CoalitionJsonModel.cs" />
     <Compile Include="Helpers\DAL\Contexts\IDatabaseContext.cs" />
     <Compile Include="Helpers\DAL\Contexts\IExportContext.cs" />
     <Compile Include="Helpers\DAL\Contexts\MssqlDatabaseContext.cs" />
@@ -114,11 +119,13 @@
     <Compile Include="Helpers\DAL\Contexts\TxtExportContext.cs" />
     <Compile Include="Helpers\DAL\DatabaseHandler.cs" />
     <Compile Include="Helpers\DAL\Repository.cs" />
+    <Compile Include="Helpers\Extentions.cs" />
     <Compile Include="Helpers\Objects\BaseObject.cs" />
     <Compile Include="Helpers\Objects\Coalition.cs" />
     <Compile Include="Helpers\Objects\Election.cs" />
     <Compile Include="Helpers\Objects\Party.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CoalitionModel.cs" />
     <Compile Include="Models\IndexModel.cs" />
     <Compile Include="Models\OpenModel.cs" />
     <Compile Include="Models\PartyModel.cs" />
@@ -136,6 +143,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Default\Open.cshtml" />
     <Content Include="Views\Default\PartyDetails.cshtml" />
+    <Content Include="Views\Default\CoalitionDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

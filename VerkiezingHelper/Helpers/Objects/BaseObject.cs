@@ -1,4 +1,5 @@
-﻿using VerkiezingHelper.Helpers.DAL;
+﻿using Newtonsoft.Json;
+using VerkiezingHelper.Helpers.DAL;
 
 namespace VerkiezingHelper.Helpers.Objects
 {
@@ -12,9 +13,11 @@ namespace VerkiezingHelper.Helpers.Objects
 
         public int? Id { get; set; }
         public string Name { get; set; }
+
+        [JsonIgnore]
         public Repository Repository { get; } = new Repository();
 
-        public abstract void Save();
+        //public abstract void Save();
         public abstract void Delete();
     }
 }

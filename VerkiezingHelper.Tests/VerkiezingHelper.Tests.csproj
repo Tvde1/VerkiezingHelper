@@ -48,8 +48,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="DatabaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AlgorithmsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VerkiezingHelper\VerkiezingHelper.csproj">

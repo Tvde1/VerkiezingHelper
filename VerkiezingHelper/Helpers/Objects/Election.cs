@@ -14,26 +14,21 @@ namespace VerkiezingHelper.Helpers.Objects
             AmountOfSeats = amountOfSeats;
             Date = date;
             if (Id == null) return;
-            Parties = Repository.GetParties(Id.Value);
-            Coalitions = Repository.GetCoalitions(Id.Value);
+
+            UpdateData();
         }
 
         public int? AmountOfSeats { get; set; }
-        public List<Coalition> Coalitions { get; }
+        public List<Coalition> Coalitions { get; private set; }
         public DateTime? Date { get; }
-        public List<Party> Parties { get; }
+        public List<Party> Parties { get; set; } = new List<Party>();
 
         public void CreateCoalition()
         {
             throw new NotImplementedException();
         }
 
-        public void HandleError()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Save()
+        public /*override*/ void Save()
         {
             Repository.Save(this);
         }
@@ -41,6 +36,13 @@ namespace VerkiezingHelper.Helpers.Objects
         public override void Delete()
         {
             Repository.Delete(this);
+        }
+
+        public void UpdateData()
+        {
+            if (Id == null) return;
+            Parties = Repository.GetParties(Id.Value);
+            Coalitions = Repository.GetCoalitions(Id.Value);
         }
     }
 }

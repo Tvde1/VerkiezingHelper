@@ -18,15 +18,27 @@ namespace VerkiezingHelper.Helpers.DAL
 
         public static Coalition CreateCoalition(DataRow row)
         {
-            return row == null ? null : new Coalition((int) row["CoalitionPk"], (string) row[""]);
+            var repo = new Repository();
+            if (row == null) return null;
+            var president = repo.GetParty((int) row["PresidentFk"], (int) row["ElectionFk"], false);
+            return new Coalition((int) row["CoalitionPk"], (string) row["Name"], president);
         }
 
         public static Party CreateParty(DataRow row)
         {
-            return row == null
-                ? null
-                : new Party((int) row["PartyPk"], (string) row["Name"], (string) row["LeadCandidate"],
-                    (int) row["AmountOfVotes"]);
+            if (row == null) return null;
+
+            var votes = row.Table.Columns.Contains("AmountOfVotes") && !row.IsNull("AmountOfVotes")
+                ? (int) row["AmountOfVotes"]
+                : 0;
+            var percent = row.Table.Columns.Contains("PercentOfVotes") && !row.IsNull("PercentOfVotes")
+                ? (double) row["PercentOfVotes"]
+                : 0;
+            var seats = row.Table.Columns.Contains("AmountOfSeats") && !row.IsNull("AmountOfSeats")
+                ? (int) row["AmountOfSeats"]
+                : 0;
+            return new Party((int) row["PartyPk"], (string) row["Name"], (string) row["LeadCandidate"], votes, percent,
+                seats);
         }
 
         public static List<T> CreateList<T>(DataTable data, Func<DataRow, T> func)

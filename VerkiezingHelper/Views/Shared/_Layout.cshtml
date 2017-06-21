@@ -9,6 +9,7 @@
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css"/>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -43,9 +44,7 @@
             <a class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
             <strong>Warning!</strong> @Model.Warning
         </div>
-    }
-
-    @*else if (Model.Sucess != null)
+    }@*else if (Model.Sucess != null)
     {
         <div class="alert alert-success" style="margin-top: 20px">
             <a class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
@@ -58,7 +57,6 @@
     </footer>
 </div>
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 </body>
 </html>

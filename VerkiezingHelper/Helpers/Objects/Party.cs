@@ -6,10 +6,13 @@ namespace VerkiezingHelper.Helpers.Objects
         {
         }
 
-        public Party(int id, string name, string leadCandidate, int amountOfVotes) : base(id, name)
+        public Party(int id, string name, string leadCandidate, int amountOfVotes, double percentOfVotes,
+            int amountOfSeats) : base(id, name)
         {
             LeadCandidate = leadCandidate;
             AmountOfVotes = amountOfVotes;
+            PercentOfVotes = percentOfVotes;
+            AmountOfSeats = amountOfSeats;
         }
 
         public string LeadCandidate { get; set; }
@@ -18,10 +21,15 @@ namespace VerkiezingHelper.Helpers.Objects
         public double PercentOfVotes { get; set; }
         public int AmountOfSeats { get; set; }
 
-        public override void Save()
+        public void Save(int? electionId)
         {
-            Repository.Save(this);
+            Repository.Save(this, electionId);
         }
+
+        //public override void Save()
+        //{
+        //    throw new System.InvalidOperationException();
+        //}
 
         public override void Delete()
         {
