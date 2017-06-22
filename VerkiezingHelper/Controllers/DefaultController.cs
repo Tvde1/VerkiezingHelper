@@ -68,7 +68,7 @@ namespace VerkiezingHelper.Controllers
             election.Name = model.Election.Name;
 
             if (election.AmountOfSeats == null)
-                throw new Exception("man");
+                election.AmountOfSeats = 0;
 
             var totalVotes = model.Election.Parties.Sum(x => x.AmountOfVotes);
 
@@ -193,7 +193,7 @@ namespace VerkiezingHelper.Controllers
             if (coalition == null)
                 return RedirectToAction("Index");
 
-            var model = new CoalitionModel {Coalition = coalition, NewName = coalition?.Name};
+            var model = new CoalitionModel {Coalition = coalition, NewName = coalition.Name};
             return View(model);
         }
 
@@ -234,7 +234,6 @@ namespace VerkiezingHelper.Controllers
                 return RedirectToAction("Open");
 
             var data = JsonConvert.DeserializeObject<CoalitionJsonModel>(json);
-            //var parties = election.Repository.GetParties(data.Parties, election.Id);
 
             var parties = election.Parties.Where(x => data.Parties.Contains(x.Name.RemoveWhitespace())).ToList();
 
@@ -242,6 +241,7 @@ namespace VerkiezingHelper.Controllers
 
             coalition.Id = election.Repository.AddCoalitionToElection(coalition, election.Id);
             coalition.Save();
+            election.UpdateData();
             return RedirectToAction("CoalitionDetails", new {name = coalition.Name});
         }
 
